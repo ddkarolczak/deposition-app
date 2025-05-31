@@ -2,7 +2,7 @@
 
 A modern, production-ready SaaS starter template for building full-stack React applications using React Router, Convex, and Polar.sh for subscriptions.
 
-[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/remix-run/react-router-templates/tree/main/default)
+![CodeRabbit Pull Request Reviews](https://img.shields.io/coderabbit/prs/github/michaelshimeles/react-convex-starter?utm_source=oss&utm_medium=github&utm_campaign=michaelshimeles%2Freact-convex-starter&labelColor=171717&color=FF570A&link=https%3A%2F%2Fcoderabbit.ai&label=CodeRabbit+Reviews)
 
 ## Features
 
