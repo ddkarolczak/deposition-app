@@ -1,21 +1,44 @@
-# React Starter Kit
+# React Starter Kit (RSK)
 
-A modern, production-ready SaaS starter template for building full-stack React applications using React Router, Convex, and Polar.sh for subscriptions.
+A modern, production-ready SaaS starter template for building full-stack React applications using React Router v7, Convex, Clerk, and Polar.sh. Ready for Vercel deployment with built-in AI chat capabilities.
 
 ## Features
 
-- 🚀 Server-side rendering
-- ⚡️ Hot Module Replacement (HMR)
-- 📦 Asset bundling and optimization
-- 🔄 Data loading and mutations
-- 🔒 TypeScript by default
-- 🎉 TailwindCSS for styling
-- 🔐 Authentication with Clerk
-- 💳 Subscription management with Polar.sh
-- 🗄️ Real-time database with Convex
-- 📊 Dashboard with subscription status
-- 🎯 Webhook handling for payment events
-- 📖 [React Router docs](https://reactrouter.com/)
+- 🚀 **React Router v7** - Modern full-stack React framework with SSR
+- ⚡️ **Hot Module Replacement (HMR)** - Fast development experience
+- 📦 **Asset bundling and optimization** - Production-ready builds
+- 🔄 **Data loading and mutations** - Built-in loader/action patterns
+- 🔒 **TypeScript by default** - Type safety throughout
+- 🎨 **TailwindCSS v4** - Modern utility-first CSS
+- 🔐 **Authentication with Clerk** - Complete user management
+- 💳 **Subscription management with Polar.sh** - Billing and payments
+- 🗄️ **Real-time database with Convex** - Serverless backend
+- 🤖 **AI Chat Integration** - OpenAI-powered chat functionality
+- 📊 **Interactive Dashboard** - User management and analytics
+- 🎯 **Webhook handling** - Payment and subscription events
+- 📱 **Responsive Design** - Mobile-first approach
+- 🚢 **Vercel Deployment Ready** - One-click deployment
+
+## Tech Stack
+
+### Frontend
+- **React Router v7** - Full-stack React framework
+- **TailwindCSS v4** - Utility-first CSS framework
+- **shadcn/ui** - Modern component library with Radix UI
+- **Lucide React & Tabler Icons** - Beautiful icon libraries
+- **Recharts** - Data visualization
+- **Motion** - Smooth animations
+
+### Backend & Services
+- **Convex** - Real-time database and serverless functions
+- **Clerk** - Authentication and user management
+- **Polar.sh** - Subscription billing and payments
+- **OpenAI** - AI chat capabilities
+
+### Development & Deployment
+- **Vite** - Fast build tool
+- **TypeScript** - Type safety
+- **Vercel** - Deployment platform
 
 ## Getting Started
 
@@ -25,6 +48,7 @@ A modern, production-ready SaaS starter template for building full-stack React a
 - Clerk account for authentication
 - Convex account for database
 - Polar.sh account for subscriptions
+- OpenAI API key (for AI chat features)
 
 ### Installation
 
@@ -55,6 +79,9 @@ CLERK_SECRET_KEY=your_clerk_secret_key_here
 POLAR_ACCESS_TOKEN=your_polar_access_token_here
 POLAR_ORGANIZATION_ID=your_polar_organization_id_here
 POLAR_WEBHOOK_SECRET=your_polar_webhook_secret_here
+
+# OpenAI Configuration (for AI chat)
+OPENAI_API_KEY=your_openai_api_key_here
 
 # Frontend URL for redirects
 FRONTEND_URL=http://localhost:5173
@@ -90,6 +117,16 @@ npm run build
 
 ## Deployment
 
+### Vercel Deployment (Recommended)
+
+This starter kit is optimized for Vercel deployment with the `@vercel/react-router` preset:
+
+1. Connect your repository to Vercel
+2. Set environment variables in Vercel dashboard
+3. Deploy automatically on push to main branch
+
+The `react-router.config.ts` includes the Vercel preset for seamless deployment.
+
 ### Docker Deployment
 
 To build and run using Docker:
@@ -101,7 +138,7 @@ docker build -t my-app .
 docker run -p 3000:3000 my-app
 ```
 
-The containerized application can be deployed to any platform that supports Docker, including:
+The containerized application can be deployed to any platform that supports Docker:
 
 - AWS ECS
 - Google Cloud Run
@@ -118,7 +155,7 @@ Make sure to deploy the output of `npm run build`
 
 ```
 ├── package.json
-├── package-lock.json (or pnpm-lock.yaml, or bun.lockb)
+├── package-lock.json
 ├── build/
 │   ├── client/    # Static assets
 │   └── server/    # Server-side code
@@ -126,43 +163,45 @@ Make sure to deploy the output of `npm run build`
 
 ## Architecture
 
-### Frontend
-- **React Router** - Modern React framework with file-based routing
-- **TailwindCSS** - Utility-first CSS framework
-- **shadcn/ui** - Modern component library
-
-### Backend
-- **Convex** - Real-time database and serverless functions
-- **Clerk** - Authentication and user management
-- **Polar.sh** - Subscription billing and payments
+### Key Routes
+- `/` - Homepage with pricing
+- `/pricing` - Dynamic pricing page
+- `/dashboard` - Protected user dashboard
+- `/dashboard/chat` - AI-powered chat interface
+- `/dashboard/settings` - User settings
+- `/success` - Subscription success page
+- `/webhook/polar` - Polar.sh webhook handler
 
 ### Key Components
 
-#### Subscription Integration
+#### Authentication & Authorization
+- Protected routes with Clerk authentication
+- Server-side user data loading with loaders
+- Automatic user synchronization
+
+#### Subscription Management
 - Dynamic pricing cards fetched from Polar.sh
 - Secure checkout flow with redirect handling
 - Real-time subscription status updates
 - Customer portal for subscription management
 - Webhook handling for payment events
 
-#### Dashboard
-- Protected routes with authentication
-- Subscription status display
-- User profile management
+#### Dashboard Features
+- Interactive sidebar navigation
 - Real-time data updates
+- User profile management
+- AI chat functionality
+- Subscription status display
 
-## API Routes
+#### AI Chat Integration
+- OpenAI-powered conversations
+- Real-time message streaming
+- Chat history persistence
+- Responsive chat interface
 
-- `/pricing` - Dynamic pricing page with backend integration
-- `/success` - Subscription success page
-- `/dashboard` - Protected user dashboard
-- `/webhook/polar` - Polar.sh webhook handler
+## Environment Variables
 
-## Deployment
-
-### Environment Variables
-
-Make sure to set all required environment variables in your production environment:
+### Required for Production
 
 - `CONVEX_DEPLOYMENT` - Your Convex deployment URL
 - `VITE_CONVEX_URL` - Your Convex client URL
@@ -171,46 +210,57 @@ Make sure to set all required environment variables in your production environme
 - `POLAR_ACCESS_TOKEN` - Polar.sh API access token
 - `POLAR_ORGANIZATION_ID` - Your Polar.sh organization ID
 - `POLAR_WEBHOOK_SECRET` - Polar.sh webhook secret
+- `OPENAI_API_KEY` - OpenAI API key for chat features
 - `FRONTEND_URL` - Your production frontend URL
 
-### Docker Deployment
-
-To build and run using Docker:
-
-```bash
-docker build -t my-app .
-
-# Run the container
-docker run -p 3000:3000 my-app
-```
-
-The containerized application can be deployed to any platform that supports Docker, including:
-
-- AWS ECS
-- Google Cloud Run
-- Azure Container Apps
-- Digital Ocean App Platform
-- Fly.io
-- Railway
-
-### DIY Deployment
-
-If you're familiar with deploying Node applications, the built-in app server is production-ready.
-
-Make sure to deploy the output of `npm run build`
+## Project Structure
 
 ```
-├── package.json
-├── package-lock.json (or pnpm-lock.yaml, or bun.lockb)
-├── build/
-│   ├── client/    # Static assets
-│   └── server/    # Server-side code
+├── app/
+│   ├── components/         # Reusable UI components
+│   │   ├── ui/            # shadcn/ui components
+│   │   ├── homepage/      # Homepage sections
+│   │   └── dashboard/     # Dashboard components
+│   ├── routes/            # React Router routes
+│   └── utils/             # Utility functions
+├── convex/                # Convex backend functions
+├── public/                # Static assets
+└── docs/                  # Documentation
 ```
 
-## Styling
+## Key Dependencies
 
-This template comes with [Tailwind CSS](https://tailwindcss.com/) already configured for a simple default starting experience. You can use whatever CSS framework you prefer.
+- `react` & `react-dom` v19 - Latest React
+- `react-router` v7 - Full-stack React framework
+- `@clerk/react-router` - Authentication
+- `convex` - Real-time database
+- `@polar-sh/sdk` - Subscription management
+- `@ai-sdk/openai` & `ai` - AI chat capabilities
+- `@vercel/react-router` - Vercel deployment
+- `tailwindcss` v4 - Styling
+- `@radix-ui/*` - UI primitives
+
+## Scripts
+
+- `npm run dev` - Start development server
+- `npm run build` - Build for production
+- `npm run start` - Start production server
+- `npm run typecheck` - Run TypeScript checks
+
+## Contributing
+
+1. Fork the repository
+2. Create your feature branch
+3. Commit your changes
+4. Push to the branch
+5. Open a Pull Request
+
+## License
+
+This project is licensed under the MIT License.
 
 ---
 
-Built with ❤️ using React Router, Convex, and Polar.sh.
+**Stop rebuilding the same foundation over and over.** RSK eliminates months of integration work by providing a complete, production-ready SaaS template with authentication, payments, AI chat, and real-time data working seamlessly out of the box.
+
+Built with ❤️ using React Router v7, Convex, Clerk, Polar.sh, and OpenAI.
