@@ -50,6 +50,53 @@ export const upsertUser = mutation({
           email: identity.email,
         });
       }
+      
+      // Check if this is a master account that needs setup
+      const masterAccounts = [
+        "dominique@yourcompany.com",
+        "admin@depositiontool.com", 
+        "demo@depositiontool.com"
+      ];
+      
+      if (masterAccounts.includes(identity.email?.toLowerCase() || "")) {
+        // Set up master account if not already done
+        if (!existingUser.firmId || existingUser.role !== "admin") {
+          // Create or update master firm
+          let firmId = existingUser.firmId;
+          if (!firmId) {
+            firmId = await ctx.db.insert("firms", {
+              name: "Master Account - Unlimited",
+              ownerId: existingUser._id,
+              createdAt: Date.now(),
+              credits: 999999,
+              maxMembers: 999,
+              settings: {
+                allowMemberInvites: true,
+                maxUploadSize: 10 * 1024 * 1024 * 1024, // 10GB
+                retentionDays: 99999,
+              },
+            });
+          } else {
+            // Update existing firm to master status
+            await ctx.db.patch(firmId, {
+              credits: 999999,
+              maxMembers: 999,
+              settings: {
+                allowMemberInvites: true,
+                maxUploadSize: 10 * 1024 * 1024 * 1024, // 10GB
+                retentionDays: 99999,
+              },
+            });
+          }
+          
+          // Update user to admin
+          await ctx.db.patch(existingUser._id, {
+            firmId: firmId,
+            role: "admin",
+          });
+        }
+      }
+      
       return existingUser;
     }
 
@@ -59,6 +106,37 @@ export const upsertUser = mutation({
       email: identity.email,
       tokenIdentifier: identity.subject,
     });
+
+    const newUser = await ctx.db.get(userId);
+    
+    // Check if this is a master account
+    const masterAccounts = [
+      "dominique@yourcompany.com",
+      "admin@depositiontool.com", 
+      "demo@depositiontool.com"
+    ];
+    
+    if (masterAccounts.includes(identity.email?.toLowerCase() || "")) {
+      // Create master firm
+      const firmId = await ctx.db.insert("firms", {
+        name: "Master Account - Unlimited",
+        ownerId: userId,
+        createdAt: Date.now(),
+        credits: 999999,
+        maxMembers: 999,
+        settings: {
+          allowMemberInvites: true,
+          maxUploadSize: 10 * 1024 * 1024 * 1024, // 10GB
+          retentionDays: 99999,
+        },
+      });
+      
+      // Update user with firm and admin role
+      await ctx.db.patch(userId, {
+        firmId: firmId,
+        role: "admin",
+      });
+    }
 
     return await ctx.db.get(userId);
   },

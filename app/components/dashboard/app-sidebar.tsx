@@ -1,5 +1,5 @@
 import { IconDashboard, IconSettings } from "@tabler/icons-react";
-import { MessageCircle } from "lucide-react";
+import { MessageCircle, Upload, FileText, BarChart3, Users } from "lucide-react";
 import { Link } from "react-router";
 import { NavMain } from "./nav-main";
 import { NavSecondary } from "./nav-secondary";
@@ -21,12 +21,32 @@ const data = {
       icon: IconDashboard,
     },
     {
+      title: "Upload",
+      url: "/dashboard/upload",
+      icon: Upload,
+    },
+    {
+      title: "Documents",
+      url: "/dashboard/documents",
+      icon: FileText,
+    },
+    {
+      title: "Reports",
+      url: "/dashboard/reports",
+      icon: BarChart3,
+    },
+    {
       title: "Chat",
       url: "/dashboard/chat",
       icon: MessageCircle,
     },
   ],
   navSecondary: [
+    {
+      title: "Team",
+      url: "/dashboard/team",
+      icon: Users,
+    },
     {
       title: "Settings",
       url: "/dashboard/settings",
@@ -48,7 +68,7 @@ export function AppSidebar({
         <SidebarMenu>
           <SidebarMenuItem>
             <Link to="/" prefetch="viewport">
-              <span className="text-base font-semibold">Ras Mic Inc.</span>
+              <span className="text-base font-semibold">Deposition Objection Tool</span>
             </Link>
           </SidebarMenuItem>
         </SidebarMenu>
