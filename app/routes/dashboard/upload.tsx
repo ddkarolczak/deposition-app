@@ -1,4 +1,4 @@
-import { json } from "react-router";
+import { data } from "react-router";
 import { useLoaderData } from "react-router";
 import { getAuth } from "@clerk/react-router/ssr.server";
 import { Button } from "~/components/ui/button";
@@ -23,7 +23,7 @@ export const loader = async (args: Route.LoaderArgs) => {
   const firm = { name: "Sample Firm", credits: 999999 };
   const credits = 999999;
 
-  return json({
+  return data({
     firm,
     credits,
   });

@@ -1,4 +1,4 @@
-import { json } from "react-router";
+import { data } from "react-router";
 import { Link, useLoaderData } from "react-router";
 import { getAuth } from "@clerk/react-router/ssr.server";
 import { Button } from "~/components/ui/button";
@@ -30,7 +30,7 @@ export const loader = async (args: Route.LoaderArgs) => {
     totalObjections: 247,
   };
 
-  return json({
+  return data({
     documents,
     stats,
   });

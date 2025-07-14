@@ -18,7 +18,9 @@
       "routes/subscription-required": "nodejs_eyJydW50aW1lIjoibm9kZWpzIn0",
       "routes/dashboard/index": "nodejs_eyJydW50aW1lIjoibm9kZWpzIn0",
       "routes/dashboard/chat": "nodejs_eyJydW50aW1lIjoibm9kZWpzIn0",
-      "routes/dashboard/settings": "nodejs_eyJydW50aW1lIjoibm9kZWpzIn0"
+      "routes/dashboard/settings": "nodejs_eyJydW50aW1lIjoibm9kZWpzIn0",
+      "routes/dashboard/documents": "nodejs_eyJydW50aW1lIjoibm9kZWpzIn0",
+      "routes/dashboard/upload": "nodejs_eyJydW50aW1lIjoibm9kZWpzIn0"
     },
     "routes": {
       "root": {
@@ -113,6 +115,24 @@
         "config": {
           "runtime": "nodejs"
         }
+      },
+      "routes/dashboard/documents": {
+        "id": "routes/dashboard/documents",
+        "parentId": "routes/dashboard/layout",
+        "file": "app/routes/dashboard/documents.tsx",
+        "path": "dashboard/documents",
+        "config": {
+          "runtime": "nodejs"
+        }
+      },
+      "routes/dashboard/upload": {
+        "id": "routes/dashboard/upload",
+        "parentId": "routes/dashboard/layout",
+        "file": "app/routes/dashboard/upload.tsx",
+        "path": "dashboard/upload",
+        "config": {
+          "runtime": "nodejs"
+        }
       }
     }
   },
@@ -191,6 +211,18 @@
         "parentId": "routes/dashboard/layout",
         "file": "routes/dashboard/settings.tsx",
         "path": "dashboard/settings"
+      },
+      "routes/dashboard/documents": {
+        "id": "routes/dashboard/documents",
+        "parentId": "routes/dashboard/layout",
+        "file": "routes/dashboard/documents.tsx",
+        "path": "dashboard/documents"
+      },
+      "routes/dashboard/upload": {
+        "id": "routes/dashboard/upload",
+        "parentId": "routes/dashboard/layout",
+        "file": "routes/dashboard/upload.tsx",
+        "path": "dashboard/upload"
       }
     },
     "routeDiscovery": {
