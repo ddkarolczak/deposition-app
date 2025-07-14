@@ -77,6 +77,9 @@ export default function UploadPage() {
                 Document upload and AI objection analysis will be available in the next update.
                 Master accounts will have unlimited processing credits.
               </p>
+              <p className="text-xs text-blue-600 mt-2">
+                Last updated: {new Date().toLocaleString()}
+              </p>
             </div>
 
             <div className="text-sm text-gray-600">
