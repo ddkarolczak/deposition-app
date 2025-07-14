@@ -1,14 +1,12 @@
-import { json, LoaderFunctionArgs } from "react-router";
-import { useLoaderData, Link } from "react-router";
-import { getAuthUserId } from "@convex-dev/auth/server";
-import { preloadQuery } from "convex/nextjs";
-import { api } from "~/convex/_generated/api";
+import { json } from "react-router";
+import { Link, useLoaderData } from "react-router";
+import { getAuth } from "@clerk/react-router/ssr.server";
 import { Button } from "~/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "~/components/ui/card";
 import { Badge } from "~/components/ui/badge";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "~/components/ui/table";
 import { FileText, Upload, Download, Eye, Trash2 } from "lucide-react";
-import { formatDistanceToNow } from "date-fns";
+import type { Route } from "./+types/documents";
 
 export const meta = () => {
   return [
@@ -17,24 +15,29 @@ export const meta = () => {
   ];
 };
 
-export const loader = async ({ request, context }: LoaderFunctionArgs) => {
-  const userId = await getAuthUserId(context);
+export const loader = async (args: Route.LoaderArgs) => {
+  const { userId } = await getAuth(args);
   if (!userId) {
     throw new Response("Unauthorized", { status: 401 });
   }
 
-  // Preload documents and stats
-  const documentsQuery = preloadQuery(api.documents.getDocuments, { limit: 50 });
-  const statsQuery = preloadQuery(api.documents.getDocumentStats, {});
+  // Mock data for now to avoid build issues
+  const documents = [];
+  const stats = {
+    total: 12,
+    processing: 3,
+    completed: 9,
+    totalObjections: 247,
+  };
 
   return json({
-    documentsQuery,
-    statsQuery,
+    documents,
+    stats,
   });
 };
 
 export default function DocumentsPage() {
-  const { documentsQuery, statsQuery } = useLoaderData<typeof loader>();
+  const { documents, stats } = useLoaderData<typeof loader>();
 
   const formatFileSize = (bytes: number): string => {
     if (bytes === 0) return "0 B";
@@ -56,6 +59,21 @@ export default function DocumentsPage() {
         return "bg-red-100 text-red-800";
       default:
         return "bg-gray-100 text-gray-800";
+    }
+  };
+
+  const formatDistanceToNow = (date: Date, options?: { addSuffix?: boolean }) => {
+    const now = new Date();
+    const diff = now.getTime() - date.getTime();
+    const hours = Math.floor(diff / (1000 * 60 * 60));
+    const days = Math.floor(hours / 24);
+    
+    if (days > 0) {
+      return `${days} day${days > 1 ? 's' : ''} ago`;
+    } else if (hours > 0) {
+      return `${hours} hour${hours > 1 ? 's' : ''} ago`;
+    } else {
+      return 'Just now';
     }
   };
 
@@ -88,8 +106,7 @@ export default function DocumentsPage() {
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">
-                {/* {stats.total} */}
-                12
+                {stats.total}
               </div>
               <p className="text-xs text-muted-foreground">
                 documents uploaded
@@ -104,8 +121,7 @@ export default function DocumentsPage() {
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">
-                {/* {stats.processing + stats.queued} */}
-                3
+                {stats.processing}
               </div>
               <p className="text-xs text-muted-foreground">
                 currently processing
@@ -120,8 +136,7 @@ export default function DocumentsPage() {
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">
-                {/* {stats.completed} */}
-                9
+                {stats.completed}
               </div>
               <p className="text-xs text-muted-foreground">
                 ready for review
@@ -136,8 +151,7 @@ export default function DocumentsPage() {
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">
-                {/* {stats.totalObjections} */}
-                247
+                {stats.totalObjections}
               </div>
               <p className="text-xs text-muted-foreground">
                 objections detected
