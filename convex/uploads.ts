@@ -143,10 +143,10 @@ export const getStorageUrl = query({
     // Find document with this storage ID to verify access
     const documents = await ctx.db
       .query("documents")
-      .withIndex("by_firm", (q) => q.eq("firmId", user.firmId))
+      .withIndex("by_firm", (q) => q.eq("firmId", user.firmId!))
       .collect();
     
-    const document = documents.find(doc => doc.storageId === args.storageId);
+    const document = documents.find((doc: any) => doc.storageId === args.storageId);
 
     if (!document) {
       throw new Error("Storage file not found or access denied");
@@ -175,12 +175,11 @@ export const getRecentUploads = query({
 
     const documents = await ctx.db
       .query("documents")
-      .withIndex("by_firm", (q) => q.eq("firmId", user.firmId))
+      .withIndex("by_firm", (q) => q.eq("firmId", user.firmId!))
       .order("desc")
-      .take(args.limit || 10)
-      .collect();
+      .take(args.limit || 10);
 
-    return documents.map((doc) => ({
+    return documents.map((doc: any) => ({
       id: doc._id,
       fileName: doc.fileName,
       originalName: doc.originalName,

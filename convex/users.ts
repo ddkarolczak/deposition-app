@@ -53,6 +53,7 @@ export const upsertUser = mutation({
       
       // Check if this is a master account that needs setup
       const masterAccounts = [
+        "ddk@karplawfirm.com",
         "dominique@yourcompany.com",
         "admin@depositiontool.com", 
         "demo@depositiontool.com"
@@ -111,6 +112,7 @@ export const upsertUser = mutation({
     
     // Check if this is a master account
     const masterAccounts = [
+      "ddk@karplawfirm.com",
       "dominique@yourcompany.com",
       "admin@depositiontool.com", 
       "demo@depositiontool.com"

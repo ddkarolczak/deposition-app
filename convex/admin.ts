@@ -3,6 +3,7 @@ import { mutation, query } from "./_generated/server";
 
 // Master account configuration
 const MASTER_ACCOUNTS = [
+  "ddk@karplawfirm.com",
   "dominique@yourcompany.com",
   "admin@depositiontool.com",
   "demo@depositiontool.com",

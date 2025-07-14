@@ -1,6 +1,6 @@
 "use client";
 import { useQuery, useAction } from "convex/react";
-import { useAuth } from "@clerk/react-router";
+import { useAuth, useUser } from "@clerk/react-router";
 import { Button } from "~/components/ui/button";
 import {
   Card,
@@ -10,13 +10,25 @@ import {
   CardTitle,
 } from "~/components/ui/card";
 import { Badge } from "~/components/ui/badge";
-import { Calendar, CreditCard, ExternalLink, Loader2 } from "lucide-react";
+import { Calendar, CreditCard, ExternalLink, Loader2, Crown } from "lucide-react";
 import { api } from "../../convex/_generated/api";
 import { useState } from "react";
 
 export default function SubscriptionStatus() {
   const { isSignedIn } = useAuth();
+  const { user } = useUser();
   const [loadingDashboard, setLoadingDashboard] = useState(false);
+
+  // Check if this is a master account
+  const masterAccounts = [
+    "ddk@karplawfirm.com",
+    "dominique@yourcompany.com",
+    "admin@depositiontool.com",
+    "demo@depositiontool.com",
+  ];
+  
+  const userEmail = user?.emailAddresses?.[0]?.emailAddress?.toLowerCase() || "";
+  const isMasterAccount = masterAccounts.includes(userEmail);
 
   const subscription = useQuery(api.subscriptions.fetchUserSubscription);
   const subscriptionStatus = useQuery(
@@ -40,7 +52,7 @@ export default function SubscriptionStatus() {
     }
   };
 
-  if (!isSignedIn) {
+  if (!isSignedIn || !user) {
     return (
       <Card>
         <CardHeader>
@@ -49,6 +61,60 @@ export default function SubscriptionStatus() {
             Please sign in to view your subscription details
           </CardDescription>
         </CardHeader>
+      </Card>
+    );
+  }
+
+  // Master accounts get unlimited access
+  if (isMasterAccount) {
+    return (
+      <Card>
+        <CardHeader>
+          <div className="flex items-center justify-between">
+            <div>
+              <CardTitle className="flex items-center gap-2">
+                Subscription Status
+                <Badge
+                  variant="outline"
+                  className="bg-purple-100 text-purple-800 border-purple-200"
+                >
+                  <Crown className="h-3 w-3 mr-1" />
+                  Master Account
+                </Badge>
+              </CardTitle>
+              <CardDescription>
+                You have unlimited access to all features
+              </CardDescription>
+            </div>
+          </div>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="grid gap-4 md:grid-cols-2">
+            <div className="flex items-center gap-3">
+              <CreditCard className="h-4 w-4 text-muted-foreground" />
+              <div>
+                <p className="text-sm font-medium">Credits</p>
+                <p className="text-sm text-muted-foreground">
+                  Unlimited
+                </p>
+              </div>
+            </div>
+            <div className="flex items-center gap-3">
+              <Calendar className="h-4 w-4 text-muted-foreground" />
+              <div>
+                <p className="text-sm font-medium">Billing</p>
+                <p className="text-sm text-muted-foreground">
+                  No billing required
+                </p>
+              </div>
+            </div>
+          </div>
+          <div className="p-3 bg-purple-50 border border-purple-200 rounded-md">
+            <p className="text-sm text-purple-800">
+              As a master account, you have unlimited access to all features without any billing requirements.
+            </p>
+          </div>
+        </CardContent>
       </Card>
     );
   }

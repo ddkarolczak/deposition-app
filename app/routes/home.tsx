@@ -55,23 +55,43 @@ export function meta({}: Route.MetaArgs) {
 export async function loader(args: Route.LoaderArgs) {
   const { userId } = await getAuth(args);
 
-  // Parallel data fetching to reduce waterfall
-  const [subscriptionData, plans] = await Promise.all([
-    userId
-      ? fetchQuery(api.subscriptions.checkUserSubscriptionStatus, {
-          userId,
-        }).catch((error) => {
-          console.error("Failed to fetch subscription data:", error);
-          return null;
-        })
-      : Promise.resolve(null),
-    fetchAction(api.subscriptions.getAvailablePlans),
-  ]);
+  if (!userId) {
+    return {
+      isSignedIn: false,
+      hasActiveSubscription: false,
+      plans: {
+        items: [],
+        pagination: { totalCount: 0 }
+      },
+    };
+  }
 
+  // Get user info to check if master account
+  const user = await fetch(`https://api.clerk.com/v1/users/${userId}`, {
+    headers: {
+      Authorization: `Bearer ${process.env.CLERK_SECRET_KEY}`,
+    },
+  }).then(res => res.json());
+
+  // Check if this is a master account
+  const masterAccounts = [
+    "ddk@karplawfirm.com",
+    "dominique@yourcompany.com",
+    "admin@depositiontool.com",
+    "demo@depositiontool.com",
+  ];
+
+  const userEmail = user.email_addresses?.[0]?.email_address?.toLowerCase() || "";
+  const isMasterAccount = masterAccounts.includes(userEmail);
+
+  // Master accounts have "active subscription" for UI purposes
   return {
-    isSignedIn: !!userId,
-    hasActiveSubscription: subscriptionData?.hasActiveSubscription || false,
-    plans,
+    isSignedIn: true,
+    hasActiveSubscription: isMasterAccount,
+    plans: {
+      items: [],
+      pagination: { totalCount: 0 }
+    },
   };
 }
 

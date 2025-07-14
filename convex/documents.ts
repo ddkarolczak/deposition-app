@@ -111,27 +111,25 @@ export const getDocuments = query({
       throw new Error("User not found or not part of a firm");
     }
 
-    let documents;
+    let documents: any[] = [];
     
-    if (args.status) {
+    if (args.status && user.firmId) {
       documents = await ctx.db
         .query("documents")
         .withIndex("by_firm_status", (q) => 
-          q.eq("firmId", user.firmId).eq("status", args.status)
+          q.eq("firmId", user.firmId!).eq("status", args.status!)
         )
         .order("desc")
-        .take(args.limit || 50)
-        .collect();
-    } else {
+        .take(args.limit || 50);
+    } else if (user.firmId) {
       documents = await ctx.db
         .query("documents")
-        .withIndex("by_firm", (q) => q.eq("firmId", user.firmId))
+        .withIndex("by_firm", (q) => q.eq("firmId", user.firmId!))
         .order("desc")
-        .take(args.limit || 50)
-        .collect();
+        .take(args.limit || 50);
     }
 
-    return documents.map((doc) => ({
+    return documents.map((doc: any) => ({
       id: doc._id,
       fileName: doc.fileName,
       originalName: doc.originalName,
@@ -258,7 +256,7 @@ export const getDocumentStats = query({
     // Get document counts by status
     const allDocuments = await ctx.db
       .query("documents")
-      .withIndex("by_firm", (q) => q.eq("firmId", user.firmId))
+      .withIndex("by_firm", (q) => q.eq("firmId", user.firmId!))
       .collect();
 
     const stats = {
@@ -286,7 +284,7 @@ export const getDocumentStats = query({
     // Get total objections
     const objections = await ctx.db
       .query("objections")
-      .withIndex("by_firm", (q) => q.eq("firmId", user.firmId))
+      .withIndex("by_firm", (q) => q.eq("firmId", user.firmId!))
       .collect();
     
     stats.totalObjections = objections.length;

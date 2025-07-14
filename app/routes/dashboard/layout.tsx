@@ -17,24 +17,36 @@ export async function loader(args: Route.LoaderArgs) {
     throw redirect("/sign-in");
   }
 
-  // Parallel data fetching to reduce waterfall
-  const [subscriptionStatus, user] = await Promise.all([
-    fetchQuery(api.subscriptions.checkUserSubscriptionStatus, { userId }),
-    createClerkClient({
-      secretKey: process.env.CLERK_SECRET_KEY,
-    }).users.getUser(userId)
-  ]);
+  // Get user info
+  const user = await createClerkClient({
+    secretKey: process.env.CLERK_SECRET_KEY,
+  }).users.getUser(userId);
 
-  // Redirect to subscription-required if no active subscription
-  if (!subscriptionStatus?.hasActiveSubscription) {
-    throw redirect("/subscription-required");
+  // Check if this is a master account
+  const masterAccounts = [
+    "ddk@karplawfirm.com",
+    "dominique@yourcompany.com",
+    "admin@depositiontool.com",
+    "demo@depositiontool.com",
+  ];
+
+  const isMasterAccount = masterAccounts.includes(user.emailAddresses[0]?.emailAddress?.toLowerCase() || "");
+
+  // Only check subscription for non-master accounts
+  if (!isMasterAccount) {
+    const subscriptionStatus = await fetchQuery(api.subscriptions.checkUserSubscriptionStatus, { userId });
+    
+    // Redirect to subscription-required if no active subscription
+    if (!subscriptionStatus?.hasActiveSubscription) {
+      throw redirect("/subscription-required");
+    }
   }
 
-  return { user };
+  return { user, isMasterAccount };
 }
 
 export default function DashboardLayout() {
-  const { user } = useLoaderData();
+  const { user, isMasterAccount } = useLoaderData();
 
   return (
     <SidebarProvider
