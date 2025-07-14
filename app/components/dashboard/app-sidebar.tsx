@@ -18,39 +18,39 @@ const data = {
     {
       title: "Dashboard",
       url: "/dashboard",
-      icon: IconDashboard,
+      icon: IconDashboard as any,
     },
     {
       title: "Upload",
       url: "/dashboard/upload",
-      icon: Upload,
+      icon: Upload as any,
     },
     {
       title: "Documents",
       url: "/dashboard/documents",
-      icon: FileText,
+      icon: FileText as any,
     },
     {
       title: "Reports",
       url: "/dashboard/reports",
-      icon: BarChart3,
+      icon: BarChart3 as any,
     },
     {
       title: "Chat",
       url: "/dashboard/chat",
-      icon: MessageCircle,
+      icon: MessageCircle as any,
     },
   ],
   navSecondary: [
     {
       title: "Team",
       url: "/dashboard/team",
-      icon: Users,
+      icon: Users as any,
     },
     {
       title: "Settings",
       url: "/dashboard/settings",
-      icon: IconSettings,
+      icon: IconSettings as any,
     },
   ],
 };

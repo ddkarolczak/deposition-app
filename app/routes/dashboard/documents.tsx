@@ -22,7 +22,7 @@ export const loader = async (args: Route.LoaderArgs) => {
   }
 
   // Mock data for now to avoid build issues
-  const documents = [];
+  const documents: any[] = [];
   const stats = {
     total: 12,
     processing: 3,
