@@ -18,5 +18,7 @@ export default [
     route("dashboard/settings", "routes/dashboard/settings.tsx"),
     route("dashboard/documents", "routes/dashboard/documents.tsx"),
     route("dashboard/upload", "routes/dashboard/upload.tsx"),
+    route("dashboard/reports", "routes/dashboard/reports.tsx"),
+    route("dashboard/team", "routes/dashboard/team.tsx"),
   ]),
 ] satisfies RouteConfig;
