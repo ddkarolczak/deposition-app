@@ -1,7 +1,7 @@
 import { useCallback, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import { useMutation } from "convex/react";
-import { api } from "~/convex/_generated/api";
+import { api } from "../../../convex/_generated/api";
 import { Button } from "~/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "~/components/ui/card";
 import { Input } from "~/components/ui/input";
@@ -83,7 +83,7 @@ export function UploadForm({ onUploadComplete, onUploadStart }: UploadFormProps)
         }
       };
 
-      const uploadPromise = new Promise<string>((resolve, reject) => {
+      const uploadPromise = new Promise<any>((resolve, reject) => {
         xhr.onload = () => {
           if (xhr.status === 200) {
             const response = JSON.parse(xhr.responseText);

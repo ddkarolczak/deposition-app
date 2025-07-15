@@ -20,7 +20,9 @@
       "routes/dashboard/chat": "nodejs_eyJydW50aW1lIjoibm9kZWpzIn0",
       "routes/dashboard/settings": "nodejs_eyJydW50aW1lIjoibm9kZWpzIn0",
       "routes/dashboard/documents": "nodejs_eyJydW50aW1lIjoibm9kZWpzIn0",
-      "routes/dashboard/upload": "nodejs_eyJydW50aW1lIjoibm9kZWpzIn0"
+      "routes/dashboard/upload": "nodejs_eyJydW50aW1lIjoibm9kZWpzIn0",
+      "routes/dashboard/reports": "nodejs_eyJydW50aW1lIjoibm9kZWpzIn0",
+      "routes/dashboard/team": "nodejs_eyJydW50aW1lIjoibm9kZWpzIn0"
     },
     "routes": {
       "root": {
@@ -133,6 +135,24 @@
         "config": {
           "runtime": "nodejs"
         }
+      },
+      "routes/dashboard/reports": {
+        "id": "routes/dashboard/reports",
+        "parentId": "routes/dashboard/layout",
+        "file": "app/routes/dashboard/reports.tsx",
+        "path": "dashboard/reports",
+        "config": {
+          "runtime": "nodejs"
+        }
+      },
+      "routes/dashboard/team": {
+        "id": "routes/dashboard/team",
+        "parentId": "routes/dashboard/layout",
+        "file": "app/routes/dashboard/team.tsx",
+        "path": "dashboard/team",
+        "config": {
+          "runtime": "nodejs"
+        }
       }
     }
   },
@@ -223,6 +243,18 @@
         "parentId": "routes/dashboard/layout",
         "file": "routes/dashboard/upload.tsx",
         "path": "dashboard/upload"
+      },
+      "routes/dashboard/reports": {
+        "id": "routes/dashboard/reports",
+        "parentId": "routes/dashboard/layout",
+        "file": "routes/dashboard/reports.tsx",
+        "path": "dashboard/reports"
+      },
+      "routes/dashboard/team": {
+        "id": "routes/dashboard/team",
+        "parentId": "routes/dashboard/layout",
+        "file": "routes/dashboard/team.tsx",
+        "path": "dashboard/team"
       }
     },
     "routeDiscovery": {
