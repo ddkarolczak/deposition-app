@@ -174,9 +174,10 @@ Before committing changes:
 - Export functionality (CSV, PDF reports)
 
 ## Git Repository
-- **GitHub**: https://github.com/ddkarolczak/react-starter-kit
+- **GitHub**: https://github.com/ddkarolczak/deposition-app
 - **Vercel**: Automatic deployment on push to main branch
 - **Secrets**: Properly configured in Vercel environment variables
+- **Migration**: Moved from react-starter-kit to dedicated deposition-app repository
 
 ## Continue Session Notes
 Yes, you can use the `--continue` command to pick up where we left off. The application is now fully functional with all dashboard routes working properly. The next major development phase would likely involve implementing the actual document upload and AI processing functionality.
