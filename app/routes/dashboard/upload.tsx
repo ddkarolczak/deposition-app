@@ -78,7 +78,7 @@ export default function UploadPage() {
                 Master accounts will have unlimited processing credits.
               </p>
               <p className="text-xs text-blue-600 mt-2">
-                Last updated: {new Date().toLocaleString()} - Build: {Date.now()}
+                Last updated: {new Date().toLocaleString()} - New Repo Deploy: {Date.now()}
               </p>
             </div>
 
