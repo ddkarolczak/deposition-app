@@ -53,7 +53,7 @@ export function UploadForm({ onUploadComplete, onUploadStart }: UploadFormProps)
       'application/vnd.openxmlformats-officedocument.wordprocessingml.document': ['.docx'],
       'application/msword': ['.doc'],
     },
-    maxSize: 3 * 1024 * 1024 * 1024, // 3GB
+    maxSize: 100 * 1024 * 1024, // 100MB
     multiple: true,
   });
 
@@ -165,7 +165,7 @@ export function UploadForm({ onUploadComplete, onUploadStart }: UploadFormProps)
         <CardHeader>
           <CardTitle>Upload Deposition Transcripts</CardTitle>
           <CardDescription>
-            Upload PDF or Word documents for objection analysis. Maximum file size: 3GB.
+            Upload PDF or Word documents for objection analysis. Maximum file size: 100MB.
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -188,7 +188,7 @@ export function UploadForm({ onUploadComplete, onUploadStart }: UploadFormProps)
                   Drag & drop deposition files here, or click to select
                 </p>
                 <p className="text-sm text-gray-500">
-                  Supports PDF, DOC, and DOCX files up to 3GB
+                  Supports PDF, DOC, and DOCX files up to 100MB
                 </p>
               </div>
             )}
