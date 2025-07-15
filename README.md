@@ -1,23 +1,23 @@
-# React Starter Kit (RSK)
+# Deposition Objection Automation Tool
 
-A modern, production-ready SaaS starter template for building full-stack React applications using React Router v7, Convex, Clerk, and Polar.sh. Ready for Vercel deployment with built-in AI chat capabilities.
+A specialized legal SaaS application that helps attorneys automatically detect and analyze objections in deposition transcripts using AI technology.
+
+## 🚀 Live Application
+
+**Production URL**: https://deposition-app.vercel.app
 
 ## Features
 
-- 🚀 **React Router v7** - Modern full-stack React framework with SSR
-- ⚡️ **Hot Module Replacement (HMR)** - Fast development experience
-- 📦 **Asset bundling and optimization** - Production-ready builds
-- 🔄 **Data loading and mutations** - Built-in loader/action patterns
-- 🔒 **TypeScript by default** - Type safety throughout
-- 🎨 **TailwindCSS v4** - Modern utility-first CSS
-- 🔐 **Authentication with Clerk** - Complete user management
-- 💳 **Subscription management with Polar.sh** - Billing and payments
-- 🗄️ **Real-time database with Convex** - Serverless backend
-- 🤖 **AI Chat Integration** - OpenAI-powered chat functionality
-- 📊 **Interactive Dashboard** - User management and analytics
-- 🎯 **Webhook handling** - Payment and subscription events
-- 📱 **Responsive Design** - Mobile-first approach
-- 🚢 **Vercel Deployment Ready** - One-click deployment
+- 📄 **Document Upload** - PDF and Word deposition transcript processing
+- 🤖 **AI Objection Detection** - Automatic identification of objections in transcripts
+- 📊 **Analytics Dashboard** - Usage tracking and document statistics
+- 👥 **Team Management** - Multi-user access with role-based permissions
+- 💳 **Subscription Management** - Polar.sh integration for billing
+- 🔐 **Authentication** - Secure user management with Clerk
+- 📈 **Real-time Updates** - Live data synchronization with Convex
+- 🎯 **Master Account System** - Unlimited access for specific accounts
+- 📱 **Responsive Design** - Mobile-first legal professional interface
+- 🚢 **Production Ready** - Deployed on Vercel with full CI/CD
 
 ## Tech Stack
 
@@ -164,13 +164,16 @@ Make sure to deploy the output of `npm run build`
 ## Architecture
 
 ### Key Routes
-- `/` - Homepage with pricing
-- `/pricing` - Dynamic pricing page
-- `/dashboard` - Protected user dashboard
-- `/dashboard/chat` - AI-powered chat interface
-- `/dashboard/settings` - User settings
+- `/` - Legal professional homepage
+- `/pricing` - Subscription plans for law firms
+- `/dashboard` - Protected attorney dashboard
+- `/dashboard/upload` - Document upload interface
+- `/dashboard/documents` - Document management
+- `/dashboard/reports` - Analytics and reporting
+- `/dashboard/chat` - AI legal assistant
+- `/dashboard/settings` - User and firm settings
+- `/dashboard/team` - Team member management
 - `/success` - Subscription success page
-- `/webhook/polar` - Polar.sh webhook handler
 
 ### Key Components
 
@@ -259,8 +262,18 @@ Make sure to deploy the output of `npm run build`
 
 This project is licensed under the MIT License.
 
+## 🏢 Master Accounts
+
+The following accounts have unlimited access and bypass subscription checks:
+- `ddk@karplawfirm.com`
+- `dominique@yourcompany.com`
+- `admin@depositiontool.com`
+- `demo@depositiontool.com`
+
+## 🔄 Migration from react-starter-kit
+
+This project was migrated from the `react-starter-kit` repository to have a dedicated repository for the deposition application. All development should now happen in this repository.
+
 ---
 
-**Stop rebuilding the same foundation over and over.** RSK eliminates months of integration work by providing a complete, production-ready SaaS template with authentication, payments, AI chat, and real-time data working seamlessly out of the box.
-
-Built with ❤️ using React Router v7, Convex, Clerk, Polar.sh, and OpenAI.
+**Built with ❤️ for legal professionals** using React Router v7, Convex, Clerk, Polar.sh, and OpenAI.
