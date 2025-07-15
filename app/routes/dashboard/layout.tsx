@@ -1,5 +1,5 @@
 import { getAuth } from "@clerk/react-router/ssr.server";
-import { fetchQuery } from "convex/nextjs";
+import { fetchQuery, fetchMutation } from "convex/nextjs";
 import { redirect, useLoaderData } from "react-router";
 import { AppSidebar } from "~/components/dashboard/app-sidebar";
 import { SiteHeader } from "~/components/dashboard/site-header";
@@ -17,6 +17,9 @@ export async function loader(args: Route.LoaderArgs) {
   if (!userId) {
     throw redirect("/sign-in");
   }
+
+  // Ensure user is properly set up first
+  await fetchMutation(api.users.upsertUser, {});
 
   // Get user info
   const user = await createClerkClient({

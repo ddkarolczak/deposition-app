@@ -1,7 +1,7 @@
 import { data } from "react-router";
 import { Link, useLoaderData } from "react-router";
 import { getAuth } from "@clerk/react-router/ssr.server";
-import { fetchQuery } from "convex/nextjs";
+import { fetchQuery, fetchMutation } from "convex/nextjs";
 import { Button } from "~/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "~/components/ui/card";
 import { Badge } from "~/components/ui/badge";
@@ -24,6 +24,9 @@ export const loader = async (args: Route.LoaderArgs) => {
   }
 
   try {
+    // Ensure user is properly set up first
+    await fetchMutation(api.users.upsertUser, {});
+    
     // Fetch real documents and stats from Convex
     const documents = await fetchQuery(api.documents.getDocuments, { limit: 50 });
     const stats = await fetchQuery(api.documents.getDocumentStats, {});
@@ -42,6 +45,12 @@ export const loader = async (args: Route.LoaderArgs) => {
         processing: 0,
         completed: 0,
         totalObjections: 0,
+        uploading: 0,
+        queued: 0,
+        failed: 0,
+        deleted: 0,
+        totalSize: 0,
+        totalPages: 0,
       },
     });
   }
