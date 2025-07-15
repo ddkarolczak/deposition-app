@@ -2,6 +2,7 @@ import { data } from "react-router";
 import { Link, useLoaderData } from "react-router";
 import { getAuth } from "@clerk/react-router/ssr.server";
 import { fetchQuery, fetchMutation } from "convex/nextjs";
+import { useQuery, useMutation } from "convex/react";
 import { Button } from "~/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "~/components/ui/card";
 import { Badge } from "~/components/ui/badge";
@@ -9,6 +10,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "~
 import { FileText, Upload, Download, Eye, Trash2 } from "lucide-react";
 import { api } from "../../../convex/_generated/api";
 import type { Route } from "./+types/documents";
+import { useEffect } from "react";
 
 export const meta = () => {
   return [
@@ -27,37 +29,45 @@ export const loader = async (args: Route.LoaderArgs) => {
     // Ensure user is properly set up first
     await fetchMutation(api.users.upsertUser, {});
     
-    // Fetch real documents and stats from Convex
-    const documents = await fetchQuery(api.documents.getDocuments, { limit: 50 });
-    const stats = await fetchQuery(api.documents.getDocumentStats, {});
-
+    // Return empty data - we'll fetch on client side
     return data({
-      documents,
-      stats,
+      initialized: true,
     });
   } catch (error) {
-    console.error("Error fetching documents:", error);
-    // Fallback to empty data if there's an error
+    console.error("Error setting up user:", error);
     return data({
-      documents: [],
-      stats: {
-        total: 0,
-        processing: 0,
-        completed: 0,
-        totalObjections: 0,
-        uploading: 0,
-        queued: 0,
-        failed: 0,
-        deleted: 0,
-        totalSize: 0,
-        totalPages: 0,
-      },
+      initialized: false,
     });
   }
 };
 
 export default function DocumentsPage() {
-  const { documents, stats } = useLoaderData<typeof loader>();
+  const { initialized } = useLoaderData<typeof loader>();
+  const upsertUser = useMutation(api.users.upsertUser);
+  const documents = useQuery(api.documents.getDocuments, { limit: 50 });
+  const stats = useQuery(api.documents.getDocumentStats, {});
+
+  // Ensure user is set up on client side
+  useEffect(() => {
+    if (initialized) {
+      upsertUser({});
+    }
+  }, [initialized, upsertUser]);
+
+  // Handle loading states
+  const documentsData = documents ?? [];
+  const statsData = stats ?? {
+    total: 0,
+    processing: 0,
+    completed: 0,
+    totalObjections: 0,
+    uploading: 0,
+    queued: 0,
+    failed: 0,
+    deleted: 0,
+    totalSize: 0,
+    totalPages: 0,
+  };
 
   const formatFileSize = (bytes: number): string => {
     if (bytes === 0) return "0 B";
@@ -126,7 +136,7 @@ export default function DocumentsPage() {
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">
-                {stats.total}
+                {statsData.total}
               </div>
               <p className="text-xs text-muted-foreground">
                 documents uploaded
@@ -141,7 +151,7 @@ export default function DocumentsPage() {
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">
-                {stats.processing}
+                {statsData.processing}
               </div>
               <p className="text-xs text-muted-foreground">
                 currently processing
@@ -156,7 +166,7 @@ export default function DocumentsPage() {
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">
-                {stats.completed}
+                {statsData.completed}
               </div>
               <p className="text-xs text-muted-foreground">
                 ready for review
@@ -171,7 +181,7 @@ export default function DocumentsPage() {
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">
-                {stats.totalObjections}
+                {statsData.totalObjections}
               </div>
               <p className="text-xs text-muted-foreground">
                 objections detected
@@ -201,7 +211,7 @@ export default function DocumentsPage() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {documents.length === 0 ? (
+                {documentsData.length === 0 ? (
                   <TableRow>
                     <TableCell colSpan={6} className="text-center py-8">
                       <div className="flex flex-col items-center gap-2">
@@ -214,7 +224,7 @@ export default function DocumentsPage() {
                     </TableCell>
                   </TableRow>
                 ) : (
-                  documents.map((doc) => (
+                  documentsData.map((doc) => (
                   <TableRow key={doc.id}>
                     <TableCell className="font-medium">
                       <div className="flex items-center gap-2">

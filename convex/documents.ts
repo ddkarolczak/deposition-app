@@ -94,8 +94,13 @@ export const getDocuments = query({
     )),
   },
   handler: async (ctx, args) => {
+    console.log("getDocuments called");
+    
     const identity = await ctx.auth.getUserIdentity();
+    console.log("Identity in getDocuments:", identity);
+    
     if (!identity) {
+      console.log("No identity found in getDocuments");
       throw new Error("User must be authenticated");
     }
 
@@ -104,7 +109,10 @@ export const getDocuments = query({
       .withIndex("by_token", (q) => q.eq("tokenIdentifier", identity.subject))
       .unique();
 
+    console.log("User found in getDocuments:", user);
+
     if (!user || !user.firmId) {
+      console.log("User not found or no firmId in getDocuments");
       throw new Error("User not found or not part of a firm");
     }
 
