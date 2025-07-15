@@ -38,7 +38,7 @@ export const createDocument = mutation({
 
     // Check file size limits
     const firm = await ctx.db.get(user.firmId);
-    const maxSize = firm?.settings?.maxUploadSize || 3 * 1024 * 1024 * 1024; // 3GB default
+    const maxSize = firm?.settings?.maxUploadSize || 100 * 1024 * 1024; // 100MB default
     if (args.fileSize > maxSize) {
       throw new Error(`File size exceeds limit of ${maxSize} bytes`);
     }

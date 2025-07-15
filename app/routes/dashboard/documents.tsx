@@ -1,11 +1,13 @@
 import { data } from "react-router";
 import { Link, useLoaderData } from "react-router";
 import { getAuth } from "@clerk/react-router/ssr.server";
+import { fetchQuery } from "convex/nextjs";
 import { Button } from "~/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "~/components/ui/card";
 import { Badge } from "~/components/ui/badge";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "~/components/ui/table";
 import { FileText, Upload, Download, Eye, Trash2 } from "lucide-react";
+import { api } from "../../../convex/_generated/api";
 import type { Route } from "./+types/documents";
 
 export const meta = () => {
@@ -21,19 +23,28 @@ export const loader = async (args: Route.LoaderArgs) => {
     throw new Response("Unauthorized", { status: 401 });
   }
 
-  // Mock data for now to avoid build issues
-  const documents: any[] = [];
-  const stats = {
-    total: 12,
-    processing: 3,
-    completed: 9,
-    totalObjections: 247,
-  };
+  try {
+    // Fetch real documents and stats from Convex
+    const documents = await fetchQuery(api.documents.getDocuments, { limit: 50 });
+    const stats = await fetchQuery(api.documents.getDocumentStats, {});
 
-  return data({
-    documents,
-    stats,
-  });
+    return data({
+      documents,
+      stats,
+    });
+  } catch (error) {
+    console.error("Error fetching documents:", error);
+    // Fallback to empty data if there's an error
+    return data({
+      documents: [],
+      stats: {
+        total: 0,
+        processing: 0,
+        completed: 0,
+        totalObjections: 0,
+      },
+    });
+  }
 };
 
 export default function DocumentsPage() {
@@ -181,33 +192,20 @@ export default function DocumentsPage() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {/* Mock data - replace with actual data */}
-                {[
-                  {
-                    id: "1",
-                    originalName: "Johnson_Deposition_2024.pdf",
-                    fileSize: 15234567,
-                    status: "completed",
-                    pageCount: 247,
-                    uploadedAt: Date.now() - 3600000,
-                  },
-                  {
-                    id: "2",
-                    originalName: "Smith_Testimony_Final.docx",
-                    fileSize: 8765432,
-                    status: "processing",
-                    pageCount: 156,
-                    uploadedAt: Date.now() - 1800000,
-                  },
-                  {
-                    id: "3",
-                    originalName: "Medical_Expert_Deposition.pdf",
-                    fileSize: 23456789,
-                    status: "queued",
-                    pageCount: null,
-                    uploadedAt: Date.now() - 900000,
-                  },
-                ].map((doc) => (
+                {documents.length === 0 ? (
+                  <TableRow>
+                    <TableCell colSpan={6} className="text-center py-8">
+                      <div className="flex flex-col items-center gap-2">
+                        <FileText className="h-12 w-12 text-gray-400" />
+                        <p className="text-gray-500">No documents uploaded yet</p>
+                        <Link to="/dashboard/upload">
+                          <Button className="mt-2">Upload Your First Document</Button>
+                        </Link>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ) : (
+                  documents.map((doc) => (
                   <TableRow key={doc.id}>
                     <TableCell className="font-medium">
                       <div className="flex items-center gap-2">
@@ -247,7 +245,8 @@ export default function DocumentsPage() {
                       </div>
                     </TableCell>
                   </TableRow>
-                ))}
+                  ))
+                )}
               </TableBody>
             </Table>
           </CardContent>
