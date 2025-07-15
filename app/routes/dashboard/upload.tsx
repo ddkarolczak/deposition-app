@@ -1,11 +1,13 @@
 import { data } from "react-router";
 import { useLoaderData } from "react-router";
 import { getAuth } from "@clerk/react-router/ssr.server";
+import { fetchMutation } from "convex/nextjs";
 import { Button } from "~/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "~/components/ui/card";
 import { Upload, FileText, AlertCircle, CheckCircle } from "lucide-react";
 import { UploadForm } from "~/components/upload/upload-form";
 import { toast } from "sonner";
+import { api } from "../../../convex/_generated/api";
 import type { Route } from "./+types/upload";
 
 export const meta = () => {
@@ -21,14 +23,26 @@ export const loader = async (args: Route.LoaderArgs) => {
     throw new Response("Unauthorized", { status: 401 });
   }
 
-  // Mock data for now
-  const firm = { name: "Sample Firm", credits: 999999 };
-  const credits = 999999;
+  try {
+    // Ensure user is properly set up with a firm
+    await fetchMutation(api.users.upsertUser, {});
+    
+    // Mock data for now - will be replaced with real data
+    const firm = { name: "Sample Firm", credits: 999999 };
+    const credits = 999999;
 
-  return data({
-    firm,
-    credits,
-  });
+    return data({
+      firm,
+      credits,
+    });
+  } catch (error) {
+    console.error("Error setting up user:", error);
+    // Return mock data as fallback
+    return data({
+      firm: { name: "Sample Firm", credits: 999999 },
+      credits: 999999,
+    });
+  }
 };
 
 export default function UploadPage() {

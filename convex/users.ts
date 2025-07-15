@@ -73,7 +73,7 @@ export const upsertUser = mutation({
               maxMembers: 999,
               settings: {
                 allowMemberInvites: true,
-                maxUploadSize: 10 * 1024 * 1024 * 1024, // 10GB
+                maxUploadSize: 100 * 1024 * 1024, // 100MB
                 retentionDays: 99999,
               },
             });
@@ -84,7 +84,7 @@ export const upsertUser = mutation({
               maxMembers: 999,
               settings: {
                 allowMemberInvites: true,
-                maxUploadSize: 10 * 1024 * 1024 * 1024, // 10GB
+                maxUploadSize: 100 * 1024 * 1024, // 100MB
                 retentionDays: 99999,
               },
             });

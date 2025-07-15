@@ -33,6 +33,7 @@ export function UploadForm({ onUploadComplete, onUploadStart }: UploadFormProps)
 
   const generateUploadUrl = useMutation(api.uploads.generateUploadUrl);
   const completeUpload = useMutation(api.uploads.completeUpload);
+  const upsertUser = useMutation(api.users.upsertUser);
 
   const onDrop = useCallback((acceptedFiles: File[]) => {
     const newFiles = acceptedFiles.map(file => ({
@@ -62,10 +63,19 @@ export function UploadForm({ onUploadComplete, onUploadStart }: UploadFormProps)
 
       onUploadStart?.();
 
+      // Ensure user is properly set up first
+      console.log("Setting up user...");
+      await upsertUser({});
+      console.log("User setup complete");
+
       // Generate upload URL
       console.log("Generating upload URL...");
       const uploadUrl = await generateUploadUrl();
       console.log("Upload URL generated:", uploadUrl);
+      
+      if (!uploadUrl) {
+        throw new Error("Upload URL is empty");
+      }
 
       // Upload file with progress tracking
       const formData = new FormData();
