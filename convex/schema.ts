@@ -52,11 +52,8 @@ export default defineSchema({
     wordCount: v.optional(v.number()),
     errorMessage: v.optional(v.string()),
     metadata: v.optional(v.object({
-      caseTitle: v.optional(v.string()),
-      deponentName: v.optional(v.string()),
+      documentName: v.optional(v.string()),
       depositionDate: v.optional(v.string()),
-      court: v.optional(v.string()),
-      attorneys: v.optional(v.array(v.string())),
     })),
   }).index("by_firm", ["firmId"])
     .index("by_user", ["userId"])

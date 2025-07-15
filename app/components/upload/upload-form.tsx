@@ -27,11 +27,8 @@ interface UploadFormProps {
 export function UploadForm({ onUploadComplete, onUploadStart }: UploadFormProps) {
   const [files, setFiles] = useState<FileWithProgress[]>([]);
   const [metadata, setMetadata] = useState({
-    caseTitle: "",
-    deponentName: "",
+    documentName: "",
     depositionDate: "",
-    court: "",
-    attorneys: "",
   });
 
   const generateUploadUrl = useMutation(api.uploads.generateUploadUrl);
@@ -66,7 +63,9 @@ export function UploadForm({ onUploadComplete, onUploadStart }: UploadFormProps)
       onUploadStart?.();
 
       // Generate upload URL
+      console.log("Generating upload URL...");
       const uploadUrl = await generateUploadUrl();
+      console.log("Upload URL generated:", uploadUrl);
 
       // Upload file with progress tracking
       const formData = new FormData();
@@ -85,41 +84,55 @@ export function UploadForm({ onUploadComplete, onUploadStart }: UploadFormProps)
 
       const uploadPromise = new Promise<any>((resolve, reject) => {
         xhr.onload = () => {
+          console.log("Upload completed with status:", xhr.status);
           if (xhr.status === 200) {
             const response = JSON.parse(xhr.responseText);
+            console.log("Upload response:", response);
             resolve(response.storageId);
           } else {
+            console.error("Upload failed:", xhr.statusText, xhr.responseText);
             reject(new Error(`Upload failed: ${xhr.statusText}`));
           }
         };
-        xhr.onerror = () => reject(new Error("Upload failed"));
+        xhr.onerror = () => {
+          console.error("Upload error occurred");
+          reject(new Error("Upload failed"));
+        };
       });
 
       xhr.open("POST", uploadUrl);
       xhr.send(formData);
 
+      console.log("Starting file upload...");
       const storageId = await uploadPromise;
+      console.log("File uploaded, storageId:", storageId);
 
       // Complete upload and create document
-      const attorneys = metadata.attorneys
-        .split(",")
-        .map(a => a.trim())
-        .filter(a => a.length > 0);
-
-      const result = await completeUpload({
+      console.log("Completing upload with data:", {
         storageId,
-        fileName: fileWithProgress.file.name,
+        fileName: metadata.documentName || fileWithProgress.file.name,
         originalName: fileWithProgress.file.name,
         fileSize: fileWithProgress.file.size,
         mimeType: fileWithProgress.file.type,
         metadata: {
-          caseTitle: metadata.caseTitle || undefined,
-          deponentName: metadata.deponentName || undefined,
+          documentName: metadata.documentName || undefined,
           depositionDate: metadata.depositionDate || undefined,
-          court: metadata.court || undefined,
-          attorneys: attorneys.length > 0 ? attorneys : undefined,
         },
       });
+      
+      const result = await completeUpload({
+        storageId,
+        fileName: metadata.documentName || fileWithProgress.file.name,
+        originalName: fileWithProgress.file.name,
+        fileSize: fileWithProgress.file.size,
+        mimeType: fileWithProgress.file.type,
+        metadata: {
+          documentName: metadata.documentName || undefined,
+          depositionDate: metadata.depositionDate || undefined,
+        },
+      });
+      
+      console.log("Upload completion result:", result);
 
       setFiles(prev => prev.map((f, i) => 
         i === index ? { 
@@ -197,22 +210,16 @@ export function UploadForm({ onUploadComplete, onUploadStart }: UploadFormProps)
           {/* Metadata Form */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <Label htmlFor="caseTitle">Case Title</Label>
+              <Label htmlFor="documentName">Document Name</Label>
               <Input
-                id="caseTitle"
-                placeholder="Enter case title"
-                value={metadata.caseTitle}
-                onChange={(e) => setMetadata(prev => ({ ...prev, caseTitle: e.target.value }))}
+                id="documentName"
+                placeholder="Enter document name (optional)"
+                value={metadata.documentName}
+                onChange={(e) => setMetadata(prev => ({ ...prev, documentName: e.target.value }))}
               />
-            </div>
-            <div>
-              <Label htmlFor="deponentName">Deponent Name</Label>
-              <Input
-                id="deponentName"
-                placeholder="Enter deponent name"
-                value={metadata.deponentName}
-                onChange={(e) => setMetadata(prev => ({ ...prev, deponentName: e.target.value }))}
-              />
+              <p className="text-xs text-gray-500 mt-1">
+                Leave blank to use original filename
+              </p>
             </div>
             <div>
               <Label htmlFor="depositionDate">Deposition Date</Label>
@@ -222,24 +229,9 @@ export function UploadForm({ onUploadComplete, onUploadStart }: UploadFormProps)
                 value={metadata.depositionDate}
                 onChange={(e) => setMetadata(prev => ({ ...prev, depositionDate: e.target.value }))}
               />
-            </div>
-            <div>
-              <Label htmlFor="court">Court</Label>
-              <Input
-                id="court"
-                placeholder="Enter court name"
-                value={metadata.court}
-                onChange={(e) => setMetadata(prev => ({ ...prev, court: e.target.value }))}
-              />
-            </div>
-            <div className="md:col-span-2">
-              <Label htmlFor="attorneys">Attorneys (comma-separated)</Label>
-              <Input
-                id="attorneys"
-                placeholder="Enter attorney names separated by commas"
-                value={metadata.attorneys}
-                onChange={(e) => setMetadata(prev => ({ ...prev, attorneys: e.target.value }))}
-              />
+              <p className="text-xs text-gray-500 mt-1">
+                For easier searching later
+              </p>
             </div>
           </div>
 

@@ -31,11 +31,8 @@ export const completeUpload = mutation({
     fileSize: v.number(),
     mimeType: v.string(),
     metadata: v.optional(v.object({
-      caseTitle: v.optional(v.string()),
-      deponentName: v.optional(v.string()),
+      documentName: v.optional(v.string()),
       depositionDate: v.optional(v.string()),
-      court: v.optional(v.string()),
-      attorneys: v.optional(v.array(v.string())),
     })),
   },
   handler: async (ctx, args) => {
